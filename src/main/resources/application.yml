@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: order
+          uri: http://order-cluster:8080
+          predicates:
+            - Path=/api/orders
+          filters:
+            - name: AuthFilter
+              args:
+                authServerUrl: http://auth-cluster:8080/user/pass-id
+        - id: order-webhook
+          uri: http://order-cluster:8080
+          predicates:
+            - Path=/api/payments
