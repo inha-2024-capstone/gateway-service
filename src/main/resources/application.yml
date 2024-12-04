@@ -54,3 +54,23 @@ spring:
             name: AuthFilter
             args:
               authServerUrl: http://auth-cluster:8080/user/pass-id
+        - id: user-oauth
+          uri: http://auth-cluster:8080
+          predicates:
+            - Path=/api/oauth
+            - Path=/api/user/info
+            - Path=/api/user/sign-out
+            - Path=/api/user/profile-image
+            - Path=/api/user/password
+            - Path/api/user/nickname
+            - Path=/api/user/address
+          filters:
+            name: AuthFilter
+            args:
+              authServerUrl: http://auth-cluster:8080/user/pass-id
+        - id: user-with-auth
+          uri: http://auth-cluster:8080
+          predicates:
+            - Path=/api/user/sign-up
+            - Path=/api/user/sign-in
+            - Path=/api/user/refresh
