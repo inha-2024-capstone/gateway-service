@@ -14,3 +14,43 @@ spring:
           uri: http://order-cluster:8080
           predicates:
             - Path=/api/payments
+        - id: price-offer
+          uri: http://product-cluster:8080
+          predicates:
+            - Path=/api/price-offers
+          filters:
+            name: AuthFilter
+            args:
+              authServerUrl: http://auth-cluster:8080/user/pass-id
+        - id: product-non-auth
+          uri: http://product-cluster:8080
+          predicates:
+            - Path=/api/products
+            - Method=GET
+        - id: product-auth-post
+          uri: http://product-cluster:8080
+          predicates:
+            - Path=/api/products
+            - Method=POST
+          filters:
+            name: AuthFilter
+            args:
+              authServerUrl: http://auth-cluster:8080/user/pass-id
+        - id: product-auth-patch
+          uri: http://product-cluster:8080
+          predicates:
+            - Path=/api/products
+            - Method=PATCH
+          filters:
+            name: AuthFilter
+            args:
+              authServerUrl: http://auth-cluster:8080/user/pass-id
+        - id: product-auth-delete
+          uri: http://product-cluster:8080
+          predicates:
+            - Path=/api/products
+            - Method=DELETE
+          filters:
+            name: AuthFilter
+            args:
+              authServerUrl: http://auth-cluster:8080/user/pass-id
