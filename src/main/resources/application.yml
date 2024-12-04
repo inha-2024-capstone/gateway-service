@@ -77,7 +77,8 @@ spring:
             allowed-origin-patterns:
               - "*"
             allowed-headers:
-              - "*"
+              - "access-token"
+              - "refresh-token"
             allowed-methods:
               - "*"
 logging:
