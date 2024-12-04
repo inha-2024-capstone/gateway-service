@@ -70,6 +70,21 @@ spring:
             - Path=/api/user/sign-up, /api/user/sign-in, /api/user/refresh
        #- id: company-without-auth
        #- id: company-with-auth
+      globalcors:
+        cors-configurations:
+          "[/**]":
+            allow-credentials: true
+            allowed-origins:
+              - "*"
+            allowed-headers:
+              - Authorization
+              - access-token
+              - refresh-token
+            allowed-methods:
+              - GET
+              - PATCH
+              - POST
+              - DELETE
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
