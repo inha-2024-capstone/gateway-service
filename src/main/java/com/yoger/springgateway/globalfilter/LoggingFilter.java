@@ -26,7 +26,7 @@ public class LoggingFilter implements GlobalFilter, Ordered {
                 statusCode = response.getStatusCode().value();
             }
             log.info(
-                    "Timestamp={}, RequestID={}, Duration={}, Method={}, URI={}, StatusCode={}, Client IP={}, Headers={}",
+                    "Timestamp={}\nRequestID={}\nDuration={}\nMethod={}\nURI={}\nStatusCode={}\nClient IP={}\nHeaders={}\n",
                     LocalDateTime.now(), request.getId(), System.currentTimeMillis() - start, request.getMethod(),
                     request.getURI(), statusCode, HeaderIPExtractor.getIPFrom(exchange), request.getHeaders());
         }));

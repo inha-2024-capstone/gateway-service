@@ -58,7 +58,7 @@ spring:
         - id: user-oauth
           uri: http://auth-cluster:8080
           predicates:
-            - Path=/api/oauth | /api/user/info | /api/user/sign-out | /api/user/profile-image | /api/user/password | /api/user/nickname | /api/user/address
+            - Path=/api/oauth/**, /api/user/info, /api/user/sign-out, /api/user/profile-image, /api/user/password, /api/user/nickname, /api/user/address
           filters:
             name: AuthFilter
             args:
@@ -67,6 +67,6 @@ spring:
         - id: user-with-auth
           uri: http://auth-cluster:8080
           predicates:
-            - Path=/api/user/sign-up | /api/user/sign-in | /api/user/refresh
+            - Path=/api/user/sign-up, /api/user/sign-in, /api/user/refresh
        #- id: company-without-auth
        #- id: company-with-auth

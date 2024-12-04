@@ -20,7 +20,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
 
     private final WebClient webClient;
     private static final String USER_HEADER_NAME = "User-Id";
-    private static final String COMPANY_HEADER_NAME = "Order-Id";
+    private static final String COMPANY_HEADER_NAME = "Company-Id";
 
     public AuthFilter(WebClient webClient) {
         super(Config.class);
