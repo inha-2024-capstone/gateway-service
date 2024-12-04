@@ -85,4 +85,4 @@ spring:
               - "*"
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway: info
