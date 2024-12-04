@@ -5,7 +5,7 @@ spring:
         - id: order
           uri: http://order-cluster:8080
           predicates:
-            - Path=/api/orders
+            - Path=/api/orders/**
           filters:
             - name: AuthFilter
               args:
@@ -13,11 +13,12 @@ spring:
         - id: order-webhook
           uri: http://order-cluster:8080
           predicates:
-            - Path=/api/payments
+            - Path=/api/payments/**
+
         - id: price-offer
           uri: http://product-cluster:8080
           predicates:
-            - Path=/api/price-offers
+            - Path=/api/price-offers/**
           filters:
             name: AuthFilter
             args:
@@ -25,12 +26,12 @@ spring:
         - id: product-non-auth
           uri: http://product-cluster:8080
           predicates:
-            - Path=/api/products
+            - Path=/api/products/**
             - Method=GET
         - id: product-auth-post
           uri: http://product-cluster:8080
           predicates:
-            - Path=/api/products
+            - Path=/api/products/**
             - Method=POST
           filters:
             name: AuthFilter
@@ -39,7 +40,7 @@ spring:
         - id: product-auth-patch
           uri: http://product-cluster:8080
           predicates:
-            - Path=/api/products
+            - Path=/api/products/**
             - Method=PATCH
           filters:
             name: AuthFilter
@@ -48,7 +49,7 @@ spring:
         - id: product-auth-delete
           uri: http://product-cluster:8080
           predicates:
-            - Path=/api/products
+            - Path=/api/products/**
             - Method=DELETE
           filters:
             name: AuthFilter
@@ -57,20 +58,15 @@ spring:
         - id: user-oauth
           uri: http://auth-cluster:8080
           predicates:
-            - Path=/api/oauth
-            - Path=/api/user/info
-            - Path=/api/user/sign-out
-            - Path=/api/user/profile-image
-            - Path=/api/user/password
-            - Path/api/user/nickname
-            - Path=/api/user/address
+            - Path=/api/oauth | /api/user/info | /api/user/sign-out | /api/user/profile-image | /api/user/password | /api/user/nickname | /api/user/address
           filters:
             name: AuthFilter
             args:
               authServerUrl: http://auth-cluster:8080/user/pass-id
+
         - id: user-with-auth
           uri: http://auth-cluster:8080
           predicates:
-            - Path=/api/user/sign-up
-            - Path=/api/user/sign-in
-            - Path=/api/user/refresh
+            - Path=/api/user/sign-up | /api/user/sign-in | /api/user/refresh
+       #- id: company-without-auth
+       #- id: company-with-auth
