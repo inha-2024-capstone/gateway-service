@@ -74,17 +74,12 @@ spring:
         cors-configurations:
           "[/**]":
             allow-credentials: true
-            allowed-origins:
+            allowed-origin-patterns:
               - "*"
             allowed-headers:
-              - Authorization
-              - access-token
-              - refresh-token
+              - "*"
             allowed-methods:
-              - GET
-              - PATCH
-              - POST
-              - DELETE
+              - "*"
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
