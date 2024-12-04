@@ -70,3 +70,6 @@ spring:
             - Path=/api/user/sign-up, /api/user/sign-in, /api/user/refresh
        #- id: company-without-auth
        #- id: company-with-auth
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
