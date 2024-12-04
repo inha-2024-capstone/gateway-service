@@ -38,21 +38,23 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                 return exchange.getResponse().setComplete();
             }
 
-            log.info(config.getAuthServerUrl());
             return webClient.get().uri(config.getAuthServerUrl())
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken.get()).exchangeToMono(response -> {
                         if (response.statusCode().is2xxSuccessful()) {
                             String userId = response.headers().asHttpHeaders().getFirst(USER_HEADER_NAME);
                             if (userId != null && !userId.isEmpty()) {
-                                ServerHttpRequest build = exchange.getRequest().mutate()
+                                ServerHttpRequest builtRequest = exchange.getRequest().mutate()
                                         .header(USER_HEADER_NAME, userId).build();
-                                ServerWebExchange build1 = exchange.mutate().request(build).build();
-                                return chain.filter(build1);
+                                ServerWebExchange buildExchange = exchange.mutate().request(builtRequest).build();
+                                log.info("User-Id={} is sent", buildExchange.getRequest().getHeaders().getFirst(USER_HEADER_NAME));
+                                return chain.filter(buildExchange);
                             }
                         }
+                        log.info("status=UNAUTHORIZED");
                         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                         return exchange.getResponse().setComplete();
                     }).onErrorResume(e -> {
+                        log.info("status=INTERNAL-SERVER-ERROR");
                         exchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
                         return exchange.getResponse().setComplete();
                     });

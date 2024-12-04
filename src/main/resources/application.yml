@@ -1,75 +1,92 @@
+auth-filter:
+  name: AuthFilter
+  url: http://auth-cluster:8080/api/user/pass-id
+
+cluster-ip:
+  product: http://product-cluster:8080
+  order: http://order-cluster:8080
+  auth: http://auth-cluster:8080
+
 spring:
   cloud:
     gateway:
       routes:
         - id: order
-          uri: http://order-cluster:8080
+          uri: ${cluster-ip.order}
           predicates:
             - Path=/api/orders/**
           filters:
-            - name: AuthFilter
+            - name: ${auth-filter.name}
               args:
-                authServerUrl: http://auth-cluster:8080/user/pass-id
+                authServerUrl: ${auth-filter.url}
+
         - id: order-webhook
-          uri: http://order-cluster:8080
+          uri: ${cluster-ip.order}
           predicates:
             - Path=/api/payments/**
 
         - id: price-offer
-          uri: http://product-cluster:8080
+          uri: ${cluster-ip.product}
           predicates:
             - Path=/api/price-offers/**
           filters:
-            name: AuthFilter
-            args:
-              authServerUrl: http://auth-cluster:8080/user/pass-id
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
+
         - id: product-non-auth
-          uri: http://product-cluster:8080
+          uri: ${cluster-ip.product}
           predicates:
             - Path=/api/products/**
             - Method=GET
+
         - id: product-auth-post
-          uri: http://product-cluster:8080
+          uri: ${cluster-ip.product}
           predicates:
             - Path=/api/products/**
             - Method=POST
           filters:
-            name: AuthFilter
-            args:
-              authServerUrl: http://auth-cluster:8080/user/pass-id
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
+
         - id: product-auth-patch
-          uri: http://product-cluster:8080
+          uri: ${cluster-ip.product}
           predicates:
             - Path=/api/products/**
             - Method=PATCH
           filters:
-            name: AuthFilter
-            args:
-              authServerUrl: http://auth-cluster:8080/user/pass-id
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
+
         - id: product-auth-delete
-          uri: http://product-cluster:8080
+          uri: ${cluster-ip.product}
           predicates:
             - Path=/api/products/**
             - Method=DELETE
           filters:
-            name: AuthFilter
-            args:
-              authServerUrl: http://auth-cluster:8080/user/pass-id
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
+
         - id: user-oauth
-          uri: http://auth-cluster:8080
+          uri: ${cluster-ip.auth}
           predicates:
             - Path=/api/oauth/**, /api/user/info, /api/user/sign-out, /api/user/profile-image, /api/user/password, /api/user/nickname, /api/user/address
           filters:
-            name: AuthFilter
-            args:
-              authServerUrl: http://auth-cluster:8080/user/pass-id
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
 
         - id: user-with-auth
-          uri: http://auth-cluster:8080
+          uri: ${cluster-ip.auth}
           predicates:
             - Path=/api/user/sign-up, /api/user/sign-in, /api/user/refresh
        #- id: company-without-auth
        #- id: company-with-auth
+
+      # cors settings
       globalcors:
         cors-configurations:
           "[/**]":
