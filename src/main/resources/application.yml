@@ -34,6 +34,16 @@ spring:
               args:
                 authServerUrl: ${auth-filter.url}
 
+        - id: product-get-creator
+          uri: ${cluster-ip.product}
+          predicates:
+            - Path=/api/products/common/creator
+            - Method=GET
+          filters:
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
+
         - id: product-non-auth
           uri: ${cluster-ip.product}
           predicates:
