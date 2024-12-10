@@ -93,8 +93,22 @@ spring:
           uri: ${cluster-ip.auth}
           predicates:
             - Path=/api/user/sign-up, /api/user/sign-in, /api/user/refresh
-       #- id: company-without-auth
-       #- id: company-with-auth
+
+        - id: company-no-auth
+          uri: ${cluster-ip.auth}
+          predicates:
+            - Path=/api/company/sign-up, /api/company/refresh, /api/company/info/**, /api/company/infos
+
+        - id: company-auth
+          uri: ${cluster-ip.auth}
+          predicates:
+            - Path=/api/company/sign-in, /api/company/sign-out, /api/company/auth-info, /api/company/password, /api/company/email, /api/company/description, /api/company/short-description, /api/company/image
+          filters:
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
+
+
 
       # cors settings
       globalcors:
