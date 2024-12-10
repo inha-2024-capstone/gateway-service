@@ -97,12 +97,12 @@ spring:
         - id: company-no-auth
           uri: ${cluster-ip.auth}
           predicates:
-            - Path=/api/company/sign-up, /api/company/refresh, /api/company/info/**, /api/company/infos
+            - Path=/api/company/sign-in, /api/company/sign-up, /api/company/refresh, /api/company/info/**, /api/company/infos, /login/oauth2/code/google, /login/oauth2/code/naver, /login/oauth2/code/kakao
 
         - id: company-auth
           uri: ${cluster-ip.auth}
           predicates:
-            - Path=/api/company/sign-in, /api/company/sign-out, /api/company/auth-info, /api/company/password, /api/company/email, /api/company/description, /api/company/short-description, /api/company/image
+            - Path=/api/company/sign-out, /api/company/auth-info, /api/company/password, /api/company/email, /api/company/description, /api/company/short-description, /api/company/image
           filters:
             - name: ${auth-filter.name}
               args:
