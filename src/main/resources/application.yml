@@ -92,7 +92,7 @@ spring:
         - id: user-with-auth
           uri: ${cluster-ip.auth}
           predicates:
-            - Path=/api/user/sign-up, /api/user/sign-in, /api/user/refresh, /oauth2/**
+            - Path=/api/user/sign-up, /api/user/sign-in, /api/user/refresh, /oauth2/**, /login/**, /callback/**
 
         - id: company-no-auth
           uri: ${cluster-ip.auth}
