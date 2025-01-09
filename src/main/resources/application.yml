@@ -1,6 +1,6 @@
 auth-filter:
   name: AuthFilter
-  url: http://auth-cluster:8080/api/user/pass-id
+  url: http://auth-cluster:8080/api/auth/pass-id
 
 cluster-ip:
   product: http://product-cluster:8080
@@ -11,6 +11,7 @@ spring:
   cloud:
     gateway:
       routes:
+# ---------------- Order
         - id: order
           uri: ${cluster-ip.order}
           predicates:
@@ -34,16 +35,7 @@ spring:
               args:
                 authServerUrl: ${auth-filter.url}
 
-        - id: product-get-creator
-          uri: ${cluster-ip.product}
-          predicates:
-            - Path=/api/products/common/creator
-            - Method=GET
-          filters:
-            - name: ${auth-filter.name}
-              args:
-                authServerUrl: ${auth-filter.url}
-
+# ------------------- Product
         - id: product-non-auth
           uri: ${cluster-ip.product}
           predicates:
@@ -79,37 +71,60 @@ spring:
             - name: ${auth-filter.name}
               args:
                 authServerUrl: ${auth-filter.url}
-
-        - id: user-oauth
+# --------------------------------- Auth
+        - id: auth-noAuth
           uri: ${cluster-ip.auth}
           predicates:
-            - Path=/api/oauth/**, /api/user/info, /api/user/sign-out, /api/user/profile-image, /api/user/password, /api/user/nickname, /api/user/address
+            - Path=/api/auth/email, /api/auth/sign-in, /api/auth/refresh
+
+        - id: auth-auth
+          uri: ${cluster-ip.auth}
+          predicates:
+            - Path=/api/auth/pwd, /api/auth/sign-out
+
+        - id: user-oauth-noAuth
+          uri: ${cluster-ip.auth}
+          predicates:
+            - Path=/oauth2/**, /login/**, /callback/**
+
+        - id: user-oauth-auth
+          uri: ${cluster-ip.auth}
+          predicates:
+            - Path=/api/oauth2/**
           filters:
             - name: ${auth-filter.name}
               args:
                 authServerUrl: ${auth-filter.url}
+
+        - id: user-noAuth
+          uri: ${cluster-ip.auth}
+          predicates:
+            - Path=/api/user/sign-up, /api/user/nickname
 
         - id: user-with-auth
           uri: ${cluster-ip.auth}
           predicates:
-            - Path=/api/user/sign-up, /api/user/sign-in, /api/user/refresh, /oauth2/**, /login/**, /callback/**
-
-        - id: company-no-auth
-          uri: ${cluster-ip.auth}
-          predicates:
-            - Path=/api/company/sign-in, /api/company/sign-up, /api/company/refresh, /api/company/info/**, /api/company/infos, /login/oauth2/code/google, /login/oauth2/code/naver, /login/oauth2/code/kakao
-
-        - id: company-auth
-          uri: ${cluster-ip.auth}
-          predicates:
-            - Path=/api/company/sign-out, /api/company/auth-info, /api/company/password, /api/company/email, /api/company/description, /api/company/short-description, /api/company/image
+            - Path=/api/user/auth-info, /api/user/image
           filters:
             - name: ${auth-filter.name}
               args:
                 authServerUrl: ${auth-filter.url}
 
+        - id: company-noAuth
+          uri: ${cluster-ip.auth}
+          predicates:
+            - Path=/api/company/sign-up, /api/company/info/**, /api/company/infos
 
+        - id: company-auth
+          uri: ${cluster-ip.auth}
+          predicates:
+            - Path=/api/company/auth-info, /api/company/description, /api/company/short-description, /api/company/image
+          filters:
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
 
+# ------------------------- Chat
       # cors settings
       globalcors:
         cors-configurations:
