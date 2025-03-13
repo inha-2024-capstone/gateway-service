@@ -6,7 +6,8 @@ cluster-ip:
   product: http://product-cluster:8080
   order: http://order-cluster:8080
   auth: http://auth-cluster:8080
-
+  chat: http://chat-cluster:8080
+  chat-stomp: ws://chat-cluster:8080
 spring:
   cloud:
     gateway:
@@ -125,6 +126,20 @@ spring:
                 authServerUrl: ${auth-filter.url}
 
 # ------------------------- Chat
+        - id: chat-websocket
+          uri: ${cluster-ip.chat-stomp}
+          predicates:
+            - Path=/**
+
+        - id: chat-roomt
+          uri: ${cluster-ip.chat}
+          predicates:
+            - Path=/api/push/all, /api/chat/create, /api/chat/get/**, /api/chat/delete/**, /api/user-chat/all, /api/user-chat/delete
+          filters:
+            - name: ${auth-filter.name}
+              args:
+                authServerUrl: ${auth-filter.url}
+
       # cors settings
       globalcors:
         cors-configurations:
